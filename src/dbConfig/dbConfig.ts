@@ -1,22 +1,23 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
-export async function Connect() {
+export async function connect() {
   try {
-    mongoose.connect(process.env.MONGO_URI!);
-    const Connection = mongoose.connection;
+    mongoose.connect(process.env.MONGO_URI!); // here ! means that ts doesnt need to worry the mongo uri will definitely will be here and wont be empty string.
 
-    Connection.on("Connected", () => {
-      console.log("Connected to the database");
+    const connection = mongoose.connection;
+
+    connection.on("connected", () => {
+      console.log("MongoDB Connected");
     });
 
-    Connection.on("error", (err) => {
+    connection.on("error", (err) => {
       console.log(
-        "MongoDB connection error please check if mongo is running : " + err
+        "MongoDB connection error, please make sure database is up and running: " +
+          err
       );
       process.exit();
     });
   } catch (error) {
-    console.log("Error connecting to the database");
-    console.log(error);
+    console.log("Something went wrong in connecting with db", error);
   }
 }
